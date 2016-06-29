@@ -1,14 +1,29 @@
 package com.github.kanasaki15.passsystem;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class PassSystem extends JavaPlugin {
-	String ver = "0.1.1";
+	final private Charset CONFIG_CHAREST=StandardCharsets.UTF_8;
+	String ver = "0.2";
 	@Override
 	public void onEnable() {
+		if (!(new File("./plugins/aisys/config.yml")).exists()){
+			saveDefaultConfig();
+		}
 		getLogger().info("あいしす(仮) Ver"+ver+" 起動しました");
 		getLogger().info("by かなさき鯖( http://goo.gl/D4SEkA )");
 	}
@@ -52,8 +67,40 @@ public class PassSystem extends JavaPlugin {
 						sender.sendMessage("------------------------------------------------");
 					}
 				}else{
-					if ((sender instanceof Player)) {
-						sender.sendMessage("開発中...");
+					if (!(sender instanceof Player)) {
+						getLogger().info(ChatColor.RED+"Minecraft上で実行してください！");
+					}
+					boolean flag = false;
+					boolean pexFlag = false;
+
+					FileConfiguration conf = new YamlConfiguration();
+					List<String> word = conf.getStringList("word");
+					for (String w : word){
+						if (args[0].equals(w)){
+							flag = true;
+							break;
+						}
+					}
+					if (!(new File("./plugins/PermissionsEx/permissions.yml")).exists()){
+						pexFlag = true;
+					}else{
+						try(Reader reader=new InputStreamReader(new FileInputStream("./plugins/PermissionsEx/permissions.yml"),CONFIG_CHAREST)){
+							FileConfiguration pexconf = new YamlConfiguration();
+							pexconf.load(reader);
+//							pexconf.getStringList(); // まだここまで
+						} catch (Exception e) {
+							// TODO 自動生成された catch ブロック
+							getLogger().info(""+e);
+							sender.sendMessage(ChatColor.RED+"[pin] エラーが発生しました 管理者に知らせてください");
+
+							onDisable();
+						}
+
+					}
+					if (flag == true){
+						sender.sendMessage(ChatColor.GREEN+"[pin] 認証に成功しました！");
+					}else{
+						sender.sendMessage(ChatColor.RED+"[pin] 合言葉が違います！");
 					}
 				}
 				return true;
