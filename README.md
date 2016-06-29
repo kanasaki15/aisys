@@ -3,8 +3,7 @@
 # 合言葉プラグイン「あいしす(仮)」
 「合」言葉「シス」テム　略して　「あいしす」<br>
 多分使えるSpigot / CraftBukkit Ver : 1.8 / 1.9 / 1.10<br>
-PermissionExがある環境を前提にしています<br>
-なくても動きます
+前提プラグイン: PermissionEx まあなくても動きます<br>
 動作確認環境 :<br>
 Spigot 1.9.4 / 1.10<br>
 PermissionEx v1.23.4
