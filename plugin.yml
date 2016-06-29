@@ -1,3 +1,10 @@
-name: PassSystem
+name: aisys
 main: com.github.kanasaki15.passsystem.PassSystem
 version: 1.0
+
+commands:
+   pin:
+      description: 'あいしす'
+      usage: /<command>
+      permission: aisys.pin
+      permission-message: '権限がありません！'
