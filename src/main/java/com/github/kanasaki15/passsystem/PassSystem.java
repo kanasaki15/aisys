@@ -18,11 +18,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class PassSystem extends JavaPlugin {
 	final private Charset CONFIG_CHAREST=StandardCharsets.UTF_8;
-	String ver = "0.2";
+	String ver = "0.5";
 	@Override
 	public void onEnable() {
 		if (!(new File("./plugins/aisys/config.yml")).exists()){
 			saveDefaultConfig();
+		}
+		if (!(getServer().getPluginManager().isPluginEnabled("PermissionsEx"))){
+			getLogger().info("あいしす(仮)を使うにはPermissionsExが必要です！");
+			onDisable();
 		}
 		getLogger().info("あいしす(仮) Ver"+ver+" 起動しました");
 		getLogger().info("by かなさき鯖( http://goo.gl/D4SEkA )");
@@ -68,40 +72,28 @@ public class PassSystem extends JavaPlugin {
 					}
 				}else{
 					if (!(sender instanceof Player)) {
-						getLogger().info(ChatColor.RED+"Minecraft上で実行してください！");
+						getLogger().info("Minecraft上で実行してください！");
+						return true;
 					}
-					boolean flag = false;
-					boolean pexFlag = false;
-
-					FileConfiguration conf = new YamlConfiguration();
-					List<String> word = conf.getStringList("word");
-					for (String w : word){
-						if (args[0].equals(w)){
-							flag = true;
-							break;
+					// パーミッションがなければ認証済みとみなす
+					Player p = (Player)sender;
+					if (!p.hasPermission("aisys.pin")){
+						getLogger().info("[pin] "+p.getName()+" さんは認証済みです！");
+						sender.sendMessage(ChatColor.RED+"[pin] すでに認証しています！");
+					}
+					String confFilePath=getDataFolder() + File.separator + "config.yml";
+					try(Reader reader=new InputStreamReader(new FileInputStream(confFilePath),CONFIG_CHAREST)){
+						FileConfiguration conf=new YamlConfiguration();
+						conf.load(reader);
+						List<String> list = conf.getStringList("word");
+						for (String w : list){
+							sender.sendMessage(w);
 						}
+					}catch(Exception e){
+						getLogger().info(e.toString());
+						onDisable();
 					}
-					if (!(new File("./plugins/PermissionsEx/permissions.yml")).exists()){
-						pexFlag = true;
-					}else{
-						try(Reader reader=new InputStreamReader(new FileInputStream("./plugins/PermissionsEx/permissions.yml"),CONFIG_CHAREST)){
-							FileConfiguration pexconf = new YamlConfiguration();
-							pexconf.load(reader);
-//							pexconf.getStringList(); // まだここまで
-						} catch (Exception e) {
-							// TODO 自動生成された catch ブロック
-							getLogger().info(""+e);
-							sender.sendMessage(ChatColor.RED+"[pin] エラーが発生しました 管理者に知らせてください");
 
-							onDisable();
-						}
-
-					}
-					if (flag == true){
-						sender.sendMessage(ChatColor.GREEN+"[pin] 認証に成功しました！");
-					}else{
-						sender.sendMessage(ChatColor.RED+"[pin] 合言葉が違います！");
-					}
 				}
 				return true;
 			}else{
