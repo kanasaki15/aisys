@@ -78,6 +78,8 @@ public class PassSystem extends JavaPlugin {
 						return true;
 					}
 					Player p = (Player)sender;
+
+					// パーミッションノードがない＝認証済みってことで
 					List<String> pexList = PermissionsEx.getUser(p).getPermissions(p.getWorld().getName());
 					boolean pexFlag = false;
 					for (String pex : pexList){
@@ -104,21 +106,13 @@ public class PassSystem extends JavaPlugin {
 								flag = true;
 								break;
 							}
-							/*
-							// デバッグ
-							sender.sendMessage("取り込んできた物："+w);
-							sender.sendMessage("チャットからの入力："+args[0]);
-							if (args[0].toString().equals(w)){
-								sender.sendMessage("等しい");
-							}else{
-								sender.sendMessage("等しくない");
-							}
-							*/
 
 						}
 
 						if (flag){
-							PermissionsEx.getUser(p).setParentsIdentifier(conf.getStringList("nextPex"),"");
+							List<String> pex = conf.getStringList("nextPex");
+							PermissionsEx.getUser(p).setParentsIdentifier(pex,"");
+							PermissionsEx.getPermissionManager().resetUser(p);
 							getLogger().info("[pin] "+p.getName()+" さんが認証成功しました！");
 							sender.sendMessage(ChatColor.GREEN+"[pin] 認証成功しました！");
 

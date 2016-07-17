@@ -6,5 +6,4 @@ commands:
    pin:
       description: 'あいしす'
       usage: /<command>
-      permission: aisys.pin
 
