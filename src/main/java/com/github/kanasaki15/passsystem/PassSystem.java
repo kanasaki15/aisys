@@ -16,9 +16,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ru.tehkode.permissions.bukkit.PermissionsEx;
+
 public class PassSystem extends JavaPlugin {
 	final private Charset CONFIG_CHAREST=StandardCharsets.UTF_8;
-	String ver = "0.5";
+	String ver = "0.9";
 	@Override
 	public void onEnable() {
 		if (!(new File("./plugins/aisys/config.yml")).exists()){
@@ -80,15 +82,41 @@ public class PassSystem extends JavaPlugin {
 					if (!p.hasPermission("aisys.pin")){
 						getLogger().info("[pin] "+p.getName()+" さんは認証済みです！");
 						sender.sendMessage(ChatColor.RED+"[pin] すでに認証しています！");
+						return true;
 					}
 					String confFilePath=getDataFolder() + File.separator + "config.yml";
 					try(Reader reader=new InputStreamReader(new FileInputStream(confFilePath),CONFIG_CHAREST)){
 						FileConfiguration conf=new YamlConfiguration();
 						conf.load(reader);
 						List<String> list = conf.getStringList("word");
+						boolean flag = false;
 						for (String w : list){
-							sender.sendMessage(w);
+							if (args[0].toString().equals(w)){
+								flag = true;
+								break;
+							}
+							/*
+							// デバッグ
+							sender.sendMessage("取り込んできた物："+w);
+							sender.sendMessage("チャットからの入力："+args[0]);
+							if (args[0].toString().equals(w)){
+								sender.sendMessage("等しい");
+							}else{
+								sender.sendMessage("等しくない");
+							}
+							*/
+
 						}
+						if (flag){
+							getLogger().info("[pin] "+p.getName()+" さんが認証成功しました！");
+							sender.sendMessage(ChatColor.GREEN+"[pin] 認証成功しました！");
+							PermissionsEx.getUser(p).addGroup(conf.getString("nextPex"));
+						}else{
+							getLogger().info("[pin] "+p.getName()+" さんが認証失敗しました");
+							getLogger().info("      合言葉不一致(入力されたもの："+args[0].toString()+")");
+							sender.sendMessage(ChatColor.RED+"[pin] 合言葉が間違っています！");
+						}
+
 					}catch(Exception e){
 						getLogger().info(e.toString());
 						onDisable();

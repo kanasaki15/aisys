@@ -20,6 +20,10 @@
         <id>spigot-repo</id>
         <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
+    <repository>
+    <id>pex-repo</id>
+    <url>http://pex-repo.aoeu.xyz</url>
+    </repository>
   </repositories>
   <dependencies>
     <!--Spigot API-->
@@ -35,6 +39,12 @@
             <artifactId>bukkit</artifactId>
             <version>1.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+    </dependency>
+    <!-- PermissionsEx -->
+    <dependency>
+    <groupId>ru.tehkode</groupId>
+    <artifactId>PermissionsEx</artifactId>
+    <version>1.23.1</version>
     </dependency>
 </dependencies>
 </project>
