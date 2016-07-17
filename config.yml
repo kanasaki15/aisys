@@ -3,4 +3,5 @@ word:
   - 'あいしす'
   - 'かなさき'
 # 認証後どのグループ名にするか(PermissionExで設定したグループ名と同じにしてください)
-nextPex: 'default'
+nextPex:
+  - 'default'

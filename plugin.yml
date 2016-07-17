@@ -7,4 +7,4 @@ commands:
       description: 'あいしす'
       usage: /<command>
       permission: aisys.pin
-      permission-message: '権限がありません！'
+

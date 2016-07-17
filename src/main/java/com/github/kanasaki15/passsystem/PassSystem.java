@@ -20,7 +20,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class PassSystem extends JavaPlugin {
 	final private Charset CONFIG_CHAREST=StandardCharsets.UTF_8;
-	String ver = "0.9";
+	String ver = "1.0";
 	@Override
 	public void onEnable() {
 		if (!(new File("./plugins/aisys/config.yml")).exists()){
@@ -77,13 +77,21 @@ public class PassSystem extends JavaPlugin {
 						getLogger().info("Minecraft上で実行してください！");
 						return true;
 					}
-					// パーミッションがなければ認証済みとみなす
 					Player p = (Player)sender;
-					if (!p.hasPermission("aisys.pin")){
+					List<String> pexList = PermissionsEx.getUser(p).getPermissions(p.getWorld().getName());
+					boolean pexFlag = false;
+					for (String pex : pexList){
+						if (pex.toString().equals("aisys.pin")){
+							pexFlag = true;
+							break;
+						}
+					}
+					if (!pexFlag){
 						getLogger().info("[pin] "+p.getName()+" さんは認証済みです！");
 						sender.sendMessage(ChatColor.RED+"[pin] すでに認証しています！");
 						return true;
 					}
+
 					String confFilePath=getDataFolder() + File.separator + "config.yml";
 					try(Reader reader=new InputStreamReader(new FileInputStream(confFilePath),CONFIG_CHAREST)){
 						FileConfiguration conf=new YamlConfiguration();
@@ -91,6 +99,7 @@ public class PassSystem extends JavaPlugin {
 						List<String> list = conf.getStringList("word");
 						boolean flag = false;
 						for (String w : list){
+							// 比較
 							if (args[0].toString().equals(w)){
 								flag = true;
 								break;
@@ -107,10 +116,12 @@ public class PassSystem extends JavaPlugin {
 							*/
 
 						}
+
 						if (flag){
+							PermissionsEx.getUser(p).setParentsIdentifier(conf.getStringList("nextPex"),"");
 							getLogger().info("[pin] "+p.getName()+" さんが認証成功しました！");
 							sender.sendMessage(ChatColor.GREEN+"[pin] 認証成功しました！");
-							PermissionsEx.getUser(p).addGroup(conf.getString("nextPex"));
+
 						}else{
 							getLogger().info("[pin] "+p.getName()+" さんが認証失敗しました");
 							getLogger().info("      合言葉不一致(入力されたもの："+args[0].toString()+")");
