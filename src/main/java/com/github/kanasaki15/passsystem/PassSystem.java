@@ -1,8 +1,14 @@
 package com.github.kanasaki15.passsystem;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -20,11 +26,32 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class PassSystem extends JavaPlugin {
 	final private Charset CONFIG_CHAREST=StandardCharsets.UTF_8;
-	String ver = "1.0";
+	String ver = "1.1";
 	@Override
 	public void onEnable() {
 		if (!(new File("./plugins/aisys/config.yml")).exists()){
 			saveDefaultConfig();
+		}
+		if (!(new File("./plugins/aisys/m.yml")).exists()){
+			// メッセージ設定ファイルがなかったらデフォのメッセージ設定を保存する
+			BufferedReader br = new BufferedReader(new InputStreamReader(getResource("m.yml"),CONFIG_CHAREST));
+			try {
+				String l = br.readLine();
+				try(PrintWriter pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./plugins/aisys/m.yml"),CONFIG_CHAREST)))){
+					while(l != null){
+						pw.println(l);
+						l = br.readLine();
+					}
+				}catch(IOException e){
+					getLogger().info(""+e);
+					onDisable();
+				}
+				br.close();
+			} catch (IOException e1) {
+				// TODO 自動生成された catch ブロック
+				getLogger().info(""+e1);
+				onDisable();
+			}
 		}
 		if (!(getServer().getPluginManager().isPluginEnabled("PermissionsEx"))){
 			getLogger().info("あいしす(仮)を使うにはPermissionsExが必要です！");
@@ -36,7 +63,6 @@ public class PassSystem extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		getLogger().info("あいしす(仮) Ver"+ver+" 終了しました");
-
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
@@ -89,12 +115,23 @@ public class PassSystem extends JavaPlugin {
 						}
 					}
 					if (!pexFlag){
+						/*
 						getLogger().info("[pin] "+p.getName()+" さんは認証済みです！");
 						sender.sendMessage(ChatColor.RED+"[pin] すでに認証しています！");
+						*/
+						try(Reader reader2=new InputStreamReader(new FileInputStream(getDataFolder()+File.separator +"m.yml"),CONFIG_CHAREST)){
+							FileConfiguration conf2 = new YamlConfiguration();
+							conf2.load(reader2);
+							getLogger().info("[pin] "+conf2.getString("pin_ng1").replace("&Player", p.getName()));
+							sender.sendMessage(ChatColor.RED+"[pin] "+conf2.getString("pin_ng2"));
+						}catch(Exception e){
+							getLogger().info(e.toString());
+							onDisable();
+						}
 						return true;
 					}
 
-					String confFilePath=getDataFolder() + File.separator + "config.yml";
+					String confFilePath = getDataFolder() + File.separator + "config.yml";
 					try(Reader reader=new InputStreamReader(new FileInputStream(confFilePath),CONFIG_CHAREST)){
 						FileConfiguration conf=new YamlConfiguration();
 						conf.load(reader);
@@ -108,18 +145,34 @@ public class PassSystem extends JavaPlugin {
 							}
 
 						}
-
-						if (flag){
+						if ((flag && conf.getBoolean("wordFlag")) || (!flag && !conf.getBoolean("wordFlag"))){
 							List<String> pex = conf.getStringList("nextPex");
 							PermissionsEx.getUser(p).setParentsIdentifier(pex,"");
 							PermissionsEx.getPermissionManager().resetUser(p);
-							getLogger().info("[pin] "+p.getName()+" さんが認証成功しました！");
-							sender.sendMessage(ChatColor.GREEN+"[pin] 認証成功しました！");
-
+							//getLogger().info("[pin] "+p.getName()+" さんが認証成功しました！");
+							//sender.sendMessage(ChatColor.GREEN+"[pin] 認証成功しました！");
+							try(Reader reader2=new InputStreamReader(new FileInputStream(getDataFolder()+File.separator +"m.yml"),CONFIG_CHAREST)){
+								FileConfiguration conf2 = new YamlConfiguration();
+								conf2.load(reader2);
+								getLogger().info("[pin] "+conf2.getString("pin_ok1").replace("&Player", p.getName()));
+								sender.sendMessage(ChatColor.GREEN+"[pin] "+conf2.getString("pin_ok2"));
+							}catch(Exception e){
+								getLogger().info(e.toString());
+								onDisable();
+							}
 						}else{
-							getLogger().info("[pin] "+p.getName()+" さんが認証失敗しました");
-							getLogger().info("      合言葉不一致(入力されたもの："+args[0].toString()+")");
-							sender.sendMessage(ChatColor.RED+"[pin] 合言葉が間違っています！");
+							//getLogger().info("[pin] "+p.getName()+" さんが認証失敗しました");
+							//getLogger().info("      合言葉不一致(入力されたもの："+args[0].toString()+")");
+							//sender.sendMessage(ChatColor.RED+"[pin] 合言葉が間違っています！");
+							try(Reader reader2=new InputStreamReader(new FileInputStream(getDataFolder()+File.separator +"m.yml"),CONFIG_CHAREST)){
+								FileConfiguration conf2 = new YamlConfiguration();
+								conf2.load(reader2);
+								getLogger().info("[pin] "+conf2.getString("pin_ng3").replace("&Word", args[0].toString()).replace("&Player", p.getName()));
+								sender.sendMessage(ChatColor.RED+"[pin] "+conf2.getString("pin_ng4"));
+							}catch(Exception e){
+								getLogger().info(e.toString());
+								onDisable();
+							}
 						}
 
 					}catch(Exception e){
