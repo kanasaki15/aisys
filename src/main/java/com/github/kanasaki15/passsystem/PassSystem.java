@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -26,7 +27,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class PassSystem extends JavaPlugin {
 	final private Charset CONFIG_CHAREST=StandardCharsets.UTF_8;
-	String ver = "1.1";
+	String ver = "1.2-beta1";
 	@Override
 	public void onEnable() {
 		if (!(new File("./plugins/aisys/config.yml")).exists()){
@@ -56,9 +57,12 @@ public class PassSystem extends JavaPlugin {
 		if (!(getServer().getPluginManager().isPluginEnabled("PermissionsEx"))){
 			getLogger().info("あいしす(仮)を使うにはPermissionsExが必要です！");
 			onDisable();
+			getServer().getPluginManager().disablePlugin(this);
 		}
 		getLogger().info("あいしす(仮) Ver"+ver+" 起動しました");
 		getLogger().info("by かなさき鯖( http://goo.gl/D4SEkA )");
+
+
 	}
 	@Override
 	public void onDisable() {
@@ -156,6 +160,16 @@ public class PassSystem extends JavaPlugin {
 								conf2.load(reader2);
 								getLogger().info("[pin] "+conf2.getString("pin_ok1").replace("&Player", p.getName()));
 								sender.sendMessage(ChatColor.GREEN+"[pin] "+conf2.getString("pin_ok2"));
+								Collection<? extends Player> a = getServer().getOnlinePlayers();
+								for (Player pl : a){
+									List<String> pList = PermissionsEx.getUser(pl).getPermissions(pl.getWorld().getName());
+									for (String pe : pList){
+										if (pe.toString().equals("aisys.pin.admin")){
+											pl.sendMessage(ChatColor.GREEN+"[pin]"+conf2.getString("pin_ok1").replace("&Player", p.getName()));
+										}
+									}
+								}
+
 							}catch(Exception e){
 								getLogger().info(e.toString());
 								onDisable();
@@ -169,6 +183,15 @@ public class PassSystem extends JavaPlugin {
 								conf2.load(reader2);
 								getLogger().info("[pin] "+conf2.getString("pin_ng3").replace("&Word", args[0].toString()).replace("&Player", p.getName()));
 								sender.sendMessage(ChatColor.RED+"[pin] "+conf2.getString("pin_ng4"));
+								Collection<? extends Player> a = getServer().getOnlinePlayers();
+								for (Player pl : a){
+									List<String> pList = PermissionsEx.getUser(pl).getPermissions(pl.getWorld().getName());
+									for (String pe : pList){
+										if (pe.toString().equals("aisys.pin.admin")){
+											pl.sendMessage(ChatColor.GREEN+"[pin]"+conf2.getString("pin_ng3").replace("&Word", args[0].toString()).replace("&Player", p.getName()));
+										}
+									}
+								}
 							}catch(Exception e){
 								getLogger().info(e.toString());
 								onDisable();
