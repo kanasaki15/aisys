@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
@@ -27,7 +29,9 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class PassSystem extends JavaPlugin {
 	final private Charset CONFIG_CHAREST=StandardCharsets.UTF_8;
-	String ver = "1.2-beta1";
+	String ver = "1.2";
+	String verNum = "2";
+	boolean NewFlag = false;
 	@Override
 	public void onEnable() {
 		if (!(new File("./plugins/aisys/config.yml")).exists()){
@@ -61,8 +65,17 @@ public class PassSystem extends JavaPlugin {
 		}
 		getLogger().info("あいしす(仮) Ver"+ver+" 起動しました");
 		getLogger().info("by かなさき鯖( http://goo.gl/D4SEkA )");
-
-
+		String NewVer = HttpGet("http://k7mc.xyz/aisys/ver.txt");
+		String NewVer_Num = HttpGet("http://k7mc.xyz/aisys/ver2.txt");
+		String ChangePoint = HttpGet("http://k7mc.xyz/aisys/ver3.txt");
+		if (!NewVer.equals(verNum)){
+			getLogger().info("新しいバージョンがあります！");
+			getLogger().info("現在Ver:"+ver+"最新Ver:"+NewVer_Num);
+			getLogger().info(""+ChangePoint);
+			NewFlag = true;
+		}
+		String[] list = {ver,NewVer,NewVer_Num,ChangePoint};
+		getServer().getPluginManager().registerEvents(new Event(this,NewFlag,list), this);
 	}
 	@Override
 	public void onDisable() {
@@ -215,4 +228,34 @@ public class PassSystem extends JavaPlugin {
 		}
 		return false;
 	}
+	public static String HttpGet(String u){
+		 String a = "";
+		 try {
+			 URL url = new URL(u);
+            HttpURLConnection connection = null;
+            try {
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                try (InputStreamReader isr = new InputStreamReader(connection.getInputStream(),StandardCharsets.UTF_8);
+                    BufferedReader reader = new BufferedReader(isr)) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                    	if (line != null){
+                    		a += line;
+                    	}
+                    }
+                }
+            }
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+		 } catch (IOException e) {
+	            e.printStackTrace();
+	     }
+		 return a;
+	 }
 }
