@@ -1,5 +1,5 @@
 # 合言葉プラグイン「あいしす(仮)」
-[![Build Status](https://travis-ci.org/kanasaki15/aisys.svg?branch=master)](https://travis-ci.org/kanasaki15/aisys)
+[![Build Status](https://travis-ci.org/kanasaki15/aisys.svg?branch=master)](https://travis-ci.org/kanasaki15/aisys)<br>
 「合」言葉「シス」テム　略して　「あいしす」<br>
 多分使えるSpigot / CraftBukkit Ver : 1.8 / 1.9 / 1.10<br>
 前提プラグイン: PermissionEx (v1.23.1以降)<br>
