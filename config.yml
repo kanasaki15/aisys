@@ -1,5 +1,8 @@
 # あいしす(仮)
-#              Ver 1.1
+#              Ver 1.2
+
+# アップデートを確認する場合はtrueにしてください
+UpdateCheck: true
 
 # 合言葉を入れたら失敗にしたい場合はfalseにしてください
 wordFlag: true

@@ -34,9 +34,7 @@ public class PassSystem extends JavaPlugin {
 	boolean NewFlag = false;
 	@Override
 	public void onEnable() {
-		if (!(new File("./plugins/aisys/config.yml")).exists()){
-			saveDefaultConfig();
-		}
+		saveDefaultConfig();
 		if (!(new File("./plugins/aisys/m.yml")).exists()){
 			// メッセージ設定ファイルがなかったらデフォのメッセージ設定を保存する
 			BufferedReader br = new BufferedReader(new InputStreamReader(getResource("m.yml"),CONFIG_CHAREST));
@@ -65,17 +63,27 @@ public class PassSystem extends JavaPlugin {
 		}
 		getLogger().info("あいしす(仮) Ver"+ver+" 起動しました");
 		getLogger().info("by かなさき鯖( http://goo.gl/D4SEkA )");
-		String NewVer = HttpGet("http://k7mc.xyz/aisys/ver.txt");
-		String NewVer_Num = HttpGet("http://k7mc.xyz/aisys/ver2.txt");
-		String ChangePoint = HttpGet("http://k7mc.xyz/aisys/ver3.txt");
-		if (!NewVer.equals(verNum)){
-			getLogger().info("新しいバージョンがあります！");
-			getLogger().info("現在Ver:"+ver+"最新Ver:"+NewVer_Num);
-			getLogger().info(""+ChangePoint);
-			NewFlag = true;
+		String confFilePath = getDataFolder() + File.separator + "config.yml";
+		try(Reader reader=new InputStreamReader(new FileInputStream(confFilePath),CONFIG_CHAREST)){
+			FileConfiguration conf=new YamlConfiguration();
+			conf.load(reader);
+			if (conf.getBoolean("UpdateCheck")){
+				String NewVer = HttpGet("http://k7mc.xyz/aisys/ver.txt");
+				String NewVer_Num = HttpGet("http://k7mc.xyz/aisys/ver2.txt");
+				String ChangePoint = HttpGet("http://k7mc.xyz/aisys/ver3.txt");
+				if (!NewVer.equals(verNum)){
+					getLogger().info("新しいバージョンがあります！");
+					getLogger().info("現在Ver:"+ver+"最新Ver:"+NewVer_Num);
+					getLogger().info(""+ChangePoint);
+					NewFlag = true;
+				}
+				String[] list = {ver,NewVer,NewVer_Num,ChangePoint};
+				getServer().getPluginManager().registerEvents(new Event(this,NewFlag,list), this);
+			}
+		}catch(Exception e){
+			getLogger().info(e.toString());
+			onDisable();
 		}
-		String[] list = {ver,NewVer,NewVer_Num,ChangePoint};
-		getServer().getPluginManager().registerEvents(new Event(this,NewFlag,list), this);
 	}
 	@Override
 	public void onDisable() {

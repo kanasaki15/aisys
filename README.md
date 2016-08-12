@@ -1,4 +1,5 @@
 # 合言葉プラグイン「あいしす(仮)」
+[![Build Status](https://travis-ci.org/kanasaki15/aisys.svg?branch=master)](https://travis-ci.org/kanasaki15/aisys)
 「合」言葉「シス」テム　略して　「あいしす」<br>
 多分使えるSpigot / CraftBukkit Ver : 1.8 / 1.9 / 1.10<br>
 前提プラグイン: PermissionEx (v1.23.1以降)<br>
@@ -23,6 +24,8 @@ https://www.dropbox.com/s/psr7ol5nzhgb8ju/aisys_v1.1.jar?dl=0
 ## パーミッションノード
 - aisys.pin<br>
 -- 合言葉認証の対象にする
+- aisys.op<br>
+-- アップデート通知を受け取る対象にする (Ver 1.2以降)
 
 ## 不具合とか見つけたよ
 不具合等は http://goo.gl/ylWJhh まで
