@@ -29,8 +29,8 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class PassSystem extends JavaPlugin {
 	final private Charset CONFIG_CHAREST=StandardCharsets.UTF_8;
-	String ver = "1.2";
-	String verNum = "2";
+	String ver = "1.2.1";
+	String verNum = "3";
 	boolean NewFlag = false;
 	@Override
 	public void onEnable() {
@@ -59,7 +59,7 @@ public class PassSystem extends JavaPlugin {
 		if (!(getServer().getPluginManager().isPluginEnabled("PermissionsEx"))){
 			getLogger().info("あいしす(仮)を使うにはPermissionsExが必要です！");
 			onDisable();
-			getServer().getPluginManager().disablePlugin(this);
+
 		}
 		getLogger().info("あいしす(仮) Ver"+ver+" 起動しました");
 		getLogger().info("by かなさき鯖( http://goo.gl/D4SEkA )");
@@ -73,7 +73,7 @@ public class PassSystem extends JavaPlugin {
 				String ChangePoint = HttpGet("http://k7mc.xyz/aisys/ver3.txt");
 				if (!NewVer.equals(verNum)){
 					getLogger().info("新しいバージョンがあります！");
-					getLogger().info("現在Ver:"+ver+"最新Ver:"+NewVer_Num);
+					getLogger().info("現在Ver:"+ver+" 最新Ver:"+NewVer_Num);
 					getLogger().info(""+ChangePoint);
 					NewFlag = true;
 				}
@@ -88,6 +88,7 @@ public class PassSystem extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		getLogger().info("あいしす(仮) Ver"+ver+" 終了しました");
+		getServer().getPluginManager().disablePlugin(this);
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
@@ -185,7 +186,7 @@ public class PassSystem extends JavaPlugin {
 								for (Player pl : a){
 									List<String> pList = PermissionsEx.getUser(pl).getPermissions(pl.getWorld().getName());
 									for (String pe : pList){
-										if (pe.toString().equals("aisys.pin.admin")){
+										if (pe.toString().equals("aisys.op")){
 											pl.sendMessage(ChatColor.GREEN+"[pin]"+conf2.getString("pin_ok1").replace("&Player", p.getName()));
 										}
 									}
@@ -208,7 +209,7 @@ public class PassSystem extends JavaPlugin {
 								for (Player pl : a){
 									List<String> pList = PermissionsEx.getUser(pl).getPermissions(pl.getWorld().getName());
 									for (String pe : pList){
-										if (pe.toString().equals("aisys.pin.admin")){
+										if (pe.toString().equals("aisys.op")){
 											pl.sendMessage(ChatColor.GREEN+"[pin]"+conf2.getString("pin_ng3").replace("&Word", args[0].toString()).replace("&Player", p.getName()));
 										}
 									}

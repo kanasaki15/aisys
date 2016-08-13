@@ -29,7 +29,7 @@ public class Event implements Listener {
 			if (pex.toString().equals("aisys.op")){
 				if (flag){
 					p.sendMessage("[あいしす] 新しいバージョンがあります！");
-					p.sendMessage("[あいしす] 現在Ver:"+list[0]+"最新Ver:"+list[2]);
+					p.sendMessage("[あいしす] 現在Ver:"+list[0]+" 最新Ver:"+list[2]);
 					p.sendMessage("[あいしす] 変更点");
 					p.sendMessage("[あいしす] "+list[3]);
 				}
