@@ -185,7 +185,11 @@ public class PassSystem extends JavaPlugin {
 								for (Player pl : a){
 									List<String> pList = PermissionsEx.getUser(pl).getPermissions(pl.getWorld().getName());
 									for (String pe : pList){
+<<<<<<< HEAD
 										if (pe.toString().equals("aisys.pin.admin")){
+=======
+										if (pe.toString().equals("aisys.op")){
+>>>>>>> parent of 3f4ba0e... bugFix
 											pl.sendMessage(ChatColor.GREEN+"[pin]"+conf2.getString("pin_ok1").replace("&Player", p.getName()));
 										}
 									}
@@ -208,7 +212,11 @@ public class PassSystem extends JavaPlugin {
 								for (Player pl : a){
 									List<String> pList = PermissionsEx.getUser(pl).getPermissions(pl.getWorld().getName());
 									for (String pe : pList){
+<<<<<<< HEAD
 										if (pe.toString().equals("aisys.pin.admin")){
+=======
+										if (pe.toString().equals("aisys.op")){
+>>>>>>> parent of 3f4ba0e... bugFix
 											pl.sendMessage(ChatColor.GREEN+"[pin]"+conf2.getString("pin_ng3").replace("&Word", args[0].toString()).replace("&Player", p.getName()));
 										}
 									}
