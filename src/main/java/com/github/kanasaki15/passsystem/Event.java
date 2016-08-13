@@ -26,7 +26,7 @@ public class Event implements Listener {
 		Player p = event.getPlayer();
 		List<String> pexList = PermissionsEx.getUser(p).getPermissions(p.getWorld().getName());
 		for (String pex : pexList){
-			if (pex.toString().equals("aisys.op") || pex.toString().equals("*")){
+			if (pex.toString().equals("aisys.op")){
 				if (flag){
 					p.sendMessage("[あいしす] 新しいバージョンがあります！");
 					p.sendMessage("[あいしす] 現在Ver:"+list[0]+"最新Ver:"+list[2]);
