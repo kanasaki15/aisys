@@ -25,13 +25,15 @@ public class Event implements Listener {
 	public void PlayerEvent(PlayerJoinEvent event) {
 		Player p = event.getPlayer();
 		List<String> pexList = PermissionsEx.getUser(p).getPermissions(p.getWorld().getName());
+		boolean tempflag = false;
 		for (String pex : pexList){
-			if (pex.toString().equals("aisys.op")){
-				if (flag){
+			if (pex.toString().equals("aisys.op") || pex.toString().equals("*")){
+				if (flag && !tempflag){
 					p.sendMessage("[あいしす] 新しいバージョンがあります！");
 					p.sendMessage("[あいしす] 現在Ver:"+list[0]+"最新Ver:"+list[2]);
 					p.sendMessage("[あいしす] 変更点");
 					p.sendMessage("[あいしす] "+list[3]);
+					tempflag = true;
 				}
 			}
 		 }
