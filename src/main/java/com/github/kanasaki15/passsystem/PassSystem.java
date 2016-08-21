@@ -29,9 +29,8 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class PassSystem extends JavaPlugin {
 	final private Charset CONFIG_CHAREST=StandardCharsets.UTF_8;
-	String ver = "1.2";
-	String verNum = "2";
-	boolean NewFlag = false;
+	static String ver = "1.3";
+	static int verNum = 4;
 	@Override
 	public void onEnable() {
 		saveDefaultConfig();
@@ -68,17 +67,7 @@ public class PassSystem extends JavaPlugin {
 			FileConfiguration conf=new YamlConfiguration();
 			conf.load(reader);
 			if (conf.getBoolean("UpdateCheck")){
-				String NewVer = HttpGet("http://k7mc.xyz/aisys/ver.txt");
-				String NewVer_Num = HttpGet("http://k7mc.xyz/aisys/ver2.txt");
-				String ChangePoint = HttpGet("http://k7mc.xyz/aisys/ver3.txt");
-				if (!NewVer.equals(verNum)){
-					getLogger().info("新しいバージョンがあります！");
-					getLogger().info("現在Ver:"+ver+"最新Ver:"+NewVer_Num);
-					getLogger().info(""+ChangePoint);
-					NewFlag = true;
-				}
-				String[] list = {ver,NewVer,NewVer_Num,ChangePoint};
-				getServer().getPluginManager().registerEvents(new Event(this,NewFlag,list), this);
+				getServer().getPluginManager().registerEvents(new Event(this), this);
 			}
 		}catch(Exception e){
 			getLogger().info(e.toString());
@@ -270,4 +259,12 @@ public class PassSystem extends JavaPlugin {
 	     }
 		 return a;
 	 }
+	public static int getVerNum() {
+		// TODO 自動生成されたメソッド・スタブ
+		return verNum;
+	}
+	public static String getVer() {
+		// TODO 自動生成されたメソッド・スタブ
+		return ver;
+	}
 }
