@@ -40,6 +40,11 @@ public class Event implements Listener {
 					plugin.getLogger().info(Point);
 				}
 				if (pex.toString().equals("aisys.op") || pex.toString().equals("*")){
+					String[] a = {
+							"新しいバージョンがあります！",
+							"現在Ver:"+PassSystem.getVer()+"最新Ver:"+NewVer
+					};
+					p.getPlayer().sendMessage(a);
 					for (int r = 0; r < ChangePoint.toArray().length; r++){
 						p.getPlayer().sendMessage(ChangePoint.get(r));
 					}

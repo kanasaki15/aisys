@@ -8,7 +8,7 @@ Spigot 1.10<br>
 PermissionEx v1.23.4
 
 ## Download
-https://www.dropbox.com/s/xieg4kxx99zpqib/aisys_v1.2.1.jar?dl=0
+https://www.dropbox.com/s/gfyj7u25woeixgw/aisys_v1.3.jar?dl=0
 
 ## 使い方
 - jarファイルをpluginsフォルダに入れる
